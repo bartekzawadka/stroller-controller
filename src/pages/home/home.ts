@@ -11,4 +11,7 @@ export class HomePage {
 
   }
 
+  takePhoto(){
+    console.log("PHOTO!");
+  }
 }

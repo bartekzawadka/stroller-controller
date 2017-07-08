@@ -1,3 +1,18 @@
 page-home {
+  .vertical-align-content > *
+  {
+    display: flex!important;
+    align-content: center!important;
+    align-items: center!important;
+    overflow: hidden;
+  }
 
+  .ion-row-large{
+    height: 80px;
+  }
+
+  .jumbo-button {
+    width: 50%;
+    height: 80px;
+  }
 }
