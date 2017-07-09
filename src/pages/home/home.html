@@ -11,7 +11,11 @@
   <!--<ion-grid>-->
     <!--<ion-row class="ion-row-large">-->
       <!--<ion-col>-->
-        <button ion-button color="default" class="jumbo-button" (click)="takePhoto()">Zrób zdjęcie 360</button>
+        <ion-list no-lines class="bold">
+          <span>Status: </span>
+          <span *ngIf="statusInfo" [style.color]="statusInfo.color">{{statusInfo.title}}</span>
+        </ion-list>
+        <button ion-button color="default" class="jumbo-button" (click)="getStatus()">Zrób zdjęcie 360</button>
       <!--</ion-col>-->
     <!--</ion-row>-->
   <!--</ion-grid>-->
