@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/map';
-
+import {HttpInterceptor} from '../http-interceptor/http-interceptor';
+import {SettingsProvider} from "../settings-provider/settings-provider"
+import {StrollerSettings} from "../../models/stroller-settings";
 /*
   Generated class for the StrollerServiceProvider provider.
 
@@ -11,18 +12,124 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class StrollerServiceProvider {
 
-  constructor(public http: Http) {
+  constructor(public http: HttpInterceptor, public settingsService: SettingsProvider) {
   }
 
-  getStatus(){
+  private getApiUri(command: string){
 
-    return new Promise((resolve, reject) => {
-      this.http.get('http://192.168.1.112:4000/api/status').map(res=>res.json()).subscribe(function(response){
-        resolve(response);
-      }, function(error){
+    return new Promise<string>((resolve, reject) => {
+      if(!command || command == null || command == ''){
+        reject('Invalid command');
+      }
+
+      this.settingsService.getPreferences().then(settings => {
+        if(!settings){
+          reject('Unable to read configuration');
+          return;
+        }
+
+        if (!settings.address || settings.address == null || settings.address == "") {
+          reject('Invalid remote host address');
+          return;
+        }
+
+        let url = settings.address;
+        if(settings.port && settings.port>0){
+          url +=":"+settings.port;
+        }
+
+        if(!command.startsWith('/')){
+          command = '/'+command;
+        }
+        let uri = 'http://'+url+'/api'+command;
+
+        resolve(uri);
+      }, error => {
         reject(error);
+      });
+    })
+
+  }
+
+  fetchConfiguration(){
+    return new Promise<StrollerSettings>((resolve, reject) => {
+      this.getApiUri('config').then(uri=>{
+        this.http.get(uri).map(res=>res.json()).subscribe(function(response){
+          if(!response){
+            reject('Unable to get configuration. No data fetched');
+            return;
+          }
+
+          let settings = new StrollerSettings();
+          if(response.direction){
+            settings.direction = response.direction;
+          }
+          if(response.stepAngle){
+            settings.stepAngle = response.stepAngle;
+          }
+
+          resolve(settings);
+        }, function(error){
+          reject(error);
+        });
+      }, reason => {
+        reject(reason);
       });
     });
   }
+
+  sendConfiguration(settings: StrollerSettings){
+    return new Promise((resolve, reject) => {
+
+      if(!settings){
+        resolve();
+        return;
+      }
+
+      let config: {direction: string, stepAngle: number};
+      if(settings.direction){
+        config.direction = settings.direction;
+      }
+      if(settings.stepAngle){
+        config.stepAngle = settings.stepAngle;
+      }
+
+      this.getApiUri('config').then(uri=>{
+        this.http.post(uri, config).subscribe(function(response){
+          resolve();
+        }, function(error){
+          reject(error);
+        });
+      }, reason => {
+        reject(reason);
+      });
+    });
+  }
+
+
+  getStatus() {
+
+    return new Promise((resolve, reject) => {
+
+      this.getApiUri('status').then(uri => {
+        this.http.get(uri).subscribe(function(response){
+
+          let json: {} = null;
+          try{
+            json = response.json();
+            resolve(json);
+          }catch(e){
+            reject();
+          }
+        }, function(error){
+          reject(error);
+        })
+      }, reason => {
+        reject(reason);
+      });
+
+    });
+  }
+
 
 }

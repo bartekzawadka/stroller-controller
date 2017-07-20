@@ -17,7 +17,7 @@ export class ErrorDialogProvider {
   showError(message: string){
     let alert = this.alertCtrl.create({
       title: 'Error',
-      subTitle: message,
+      message: message,
       buttons: ['OK']
     });
     alert.present();

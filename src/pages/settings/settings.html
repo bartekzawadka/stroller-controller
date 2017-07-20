@@ -6,19 +6,19 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
   <ion-list>
-    <ion-item-group>
-      <ion-item-divider color="light">Stroller</ion-item-divider>
-
-      <ion-item>
-        <ion-label floating>Adres</ion-label>
-        <ion-input type="text" [(ngModel)]="settings.stroller.address"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label floating>Port</ion-label>
-        <ion-input type="tel" [(ngModel)]="settings.stroller.port"></ion-input>
-      </ion-item>
-    </ion-item-group>
+    <button ion-item (click)="openConnectionSettings()">Connection settings</button>
+    <ion-item>
+      <ion-label>Rotation direction</ion-label>
+      <ion-select [(ngModel)]="settings.direction" disabled="!configurationEnabled">
+        <ion-option value="counter-clockwise">Counter-Clockwise</ion-option>
+        <ion-option value="clockwise">Clockwise</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Unit angle of rotation</ion-label>
+      <ion-input type="tel" [(ngModel)]="settings.stepAngle" [disabled]="!configurationEnabled"></ion-input>
+    </ion-item>
   </ion-list>
 </ion-content>

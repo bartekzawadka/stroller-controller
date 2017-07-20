@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, LoadingController } from 'ionic-angular';
 import {StrollerServiceProvider} from '../../providers/stroller-service/stroller-service';
 import {ErrorDialogProvider} from '../../providers/error-dialog/error-dialog';
 
@@ -23,9 +23,10 @@ export class HomePage {
 
   constructor(public navCtrl: NavController,
               public strollerService: StrollerServiceProvider,
-              public errorService: ErrorDialogProvider) {
+              public errorService: ErrorDialogProvider,
+              public loaderController: LoadingController) {
     this.getStatusInfo(null);
-    this.getStatus();
+    this.refresh();
   }
 
   takePhoto(){
@@ -57,14 +58,21 @@ export class HomePage {
     this.statusInfo = statusInfo;
   }
 
-  getStatus(){
+  refresh(){
+    let loader = this.loaderController.create({
+      content: "Connecting..."
+    });
+    loader.present().then(value => {
 
-    this.strollerService.getStatus().then(data => {
-      console.log(data);
-      this.statusData = <SystemStatus> data;
-      this.getStatusInfo(this.statusData.status);
-    }, error => {
-      this.errorService.showError(error);
+      this.strollerService.getStatus().then(data => {
+        console.log(data);
+        this.statusData = <SystemStatus> data;
+        this.getStatusInfo(this.statusData.status);
+        loader.dismiss();
+      }, error => {
+        loader.dismiss();
+        this.errorService.showError(error);
+      });
     });
   }
 }
