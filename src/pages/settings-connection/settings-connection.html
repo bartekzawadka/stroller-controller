@@ -6,7 +6,7 @@
       </button>
     </ion-buttons>
     <ion-title>
-      DUPAAA
+      Connection parameters
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -21,5 +21,8 @@
       <ion-label floating>Port</ion-label>
       <ion-input type="tel" [(ngModel)]="preferences.port"></ion-input>
     </ion-item>
+    <p padding>
+      <button ion-button color="default" round full (click)="testConnection()" padding>Test connection</button>
+    </p>
   </ion-list>
 </ion-content>

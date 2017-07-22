@@ -65,7 +65,7 @@ export class HomePage {
     loader.present().then(value => {
 
       this.strollerService.getStatus().then(data => {
-        console.log(data);
+        //console.log(data);
         this.statusData = <SystemStatus> data;
         this.getStatusInfo(this.statusData.status);
         loader.dismiss();

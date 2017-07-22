@@ -3,6 +3,7 @@ import 'rxjs/add/operator/map';
 import {HttpInterceptor} from '../http-interceptor/http-interceptor';
 import {SettingsProvider} from "../settings-provider/settings-provider"
 import {StrollerSettings} from "../../models/stroller-settings";
+import {KeyValueItem} from "../../models/key-value-item";
 /*
   Generated class for the StrollerServiceProvider provider.
 
@@ -86,7 +87,7 @@ export class StrollerServiceProvider {
         return;
       }
 
-      let config: {direction: string, stepAngle: number};
+      let config: {direction: string, stepAngle: number} = {direction: undefined, stepAngle: undefined};
       if(settings.direction){
         config.direction = settings.direction;
       }
@@ -105,7 +106,6 @@ export class StrollerServiceProvider {
       });
     });
   }
-
 
   getStatus() {
 
@@ -131,5 +131,28 @@ export class StrollerServiceProvider {
     });
   }
 
+  getDirections(){
+    return new Promise<Array<KeyValueItem<string>>>((resolve, reject) => {
+      this.getApiUri('directions').then(uri=>{
+        this.http.get(uri).map(res=>res.json()).subscribe(function(response){
+          if(!response || Object.prototype.toString.call(response) !== '[object Array]'){
+            reject("Unable to get directions from device. No data returned");
+            return;
+          }
 
+          let directions: Array<KeyValueItem<string>> = [];
+
+          for(let k in response){
+            if(response[k].name && response[k].value){
+              directions.push(new KeyValueItem(response[k].name, response[k].value));
+            }
+          }
+
+          resolve(directions);
+        }, function (error) {
+          reject(error);
+        })
+      }, reason => reject(reason));
+    });
+  }
 }

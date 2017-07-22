@@ -1,32 +1,23 @@
 <ion-header>
   <ion-navbar>
+    <ion-buttons start>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>Stroller</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon name="ios-refresh"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding text-center><!-- class="vertical-align-content"-->
-  <!--<ion-list no-lines>-->
-    <!---->
-  <!--</ion-list>-->
-  <!--<ion-grid>-->
-    <!--<ion-row class="ion-row-large">-->
-      <!--<ion-col>-->
-        <ion-list no-lines class="bold">
-          <span>Status: </span>
-          <span *ngIf="statusInfo" [style.color]="statusInfo.color">{{statusInfo.title}}</span>
-        </ion-list>
-        <button ion-button color="default" class="jumbo-button" (click)="getStatus()">Zrób zdjęcie 360</button>
-      <!--</ion-col>-->
-    <!--</ion-row>-->
-  <!--</ion-grid>-->
-  <!--<h2>Welcome to Ionic!</h2>-->
-  <!--<p>-->
-    <!--This starter project comes with simple tabs-based layout for apps-->
-    <!--that are going to primarily use a Tabbed UI.-->
-  <!--</p>-->
-  <!--<p>-->
-    <!--Take a look at the <code>src/pages/</code> directory to add or change tabs,-->
-    <!--update any existing page or create new pages.-->
-  <!--</p>-->
-
+<ion-content padding-top text-center>
+  <ion-list no-lines class="bold">
+    <span>Status: </span>
+    <span *ngIf="statusInfo" [style.color]="statusInfo.color">{{statusInfo.title}}</span>
+  </ion-list>
+  <button ion-button color="default" full round large>Zrób zdjęcie 360</button>
 </ion-content>

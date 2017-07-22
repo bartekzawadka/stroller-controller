@@ -1,5 +1,10 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar hideBackButton="true">
+    <ion-buttons left>
+      <button ion-button icon-only navPop>
+        <ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>
       Ustawienia
     </ion-title>
@@ -11,14 +16,17 @@
     <button ion-item (click)="openConnectionSettings()">Connection settings</button>
     <ion-item>
       <ion-label>Rotation direction</ion-label>
-      <ion-select [(ngModel)]="settings.direction" disabled="!configurationEnabled">
+      <ion-select [(ngModel)]="settings.direction" disabled="{{!configurationEnabled}}">
         <ion-option value="counter-clockwise">Counter-Clockwise</ion-option>
         <ion-option value="clockwise">Clockwise</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
       <ion-label>Unit angle of rotation</ion-label>
-      <ion-input type="tel" [(ngModel)]="settings.stepAngle" [disabled]="!configurationEnabled"></ion-input>
+      <ion-input type="tel" [(ngModel)]="settings.stepAngle" disabled="{{!configurationEnabled}}"></ion-input>
     </ion-item>
+    <p padding>
+      <button ion-button color="default" full round (click)="saveSettings()" disabled="{{!configurationEnabled}}">Save settings</button>
+    </p>
   </ion-list>
 </ion-content>

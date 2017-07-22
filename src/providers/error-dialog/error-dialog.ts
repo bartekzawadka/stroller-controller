@@ -14,9 +14,31 @@ export class ErrorDialogProvider {
   constructor(public alertCtrl: AlertController) {
   }
 
-  showError(message: string){
+  showError(message: string, title?: string){
+    if(!title){
+      title = 'Error';
+    }
+
     let alert = this.alertCtrl.create({
-      title: 'Error',
+      title: title,
+      message: message,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  // showError(title: string, message: string){
+  //   let alert = this.alertCtrl.create({
+  //     title: title,
+  //     message: message,
+  //     buttons: ['OK']
+  //   });
+  //   alert.present();
+  // }
+
+  showInfo(title: string, message: string){
+    let alert = this.alertCtrl.create({
+      title: title,
       message: message,
       buttons: ['OK']
     });

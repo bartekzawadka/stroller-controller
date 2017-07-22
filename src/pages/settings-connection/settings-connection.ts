@@ -2,13 +2,12 @@
  * Created by barte_000 on 2017-07-13.
  */
 import { Component } from '@angular/core';
-import {NavController, Navbar} from "ionic-angular";
-import {ViewChild} from "@angular/core"
+import {NavController} from "ionic-angular";
 import { Platform } from 'ionic-angular';
 import {ErrorDialogProvider} from '../../providers/error-dialog/error-dialog';
-import {StrollerServiceProvider} from "../../providers/stroller-service/stroller-service";
 import {SettingsProvider} from "../../providers/settings-provider/settings-provider";
 import {Preferences} from "../../models/preferences";
+import {StrollerServiceProvider} from "../../providers/stroller-service/stroller-service";
 
 @Component({
   selector: 'page-settings-connection',
@@ -21,8 +20,8 @@ export class SettingsConnectionPage {
   constructor(public platform: Platform,
               public navCtrl: NavController,
               public errorService: ErrorDialogProvider,
-              public strollerService: StrollerServiceProvider,
-              public settingsService: SettingsProvider) {
+              public settingsService: SettingsProvider,
+              public strollerService: StrollerServiceProvider) {
 
 
     this.settingsService.getPreferences().then(data => {
@@ -41,6 +40,14 @@ export class SettingsConnectionPage {
     }, fail => {
       this.errorService.showError(fail);
     });
+  }
+
+  testConnection(){
+    this.strollerService.getStatus().then(() => {
+      this.errorService.showInfo("Connected", "Connection established successfully");
+    }, reason=>{
+      this.errorService.showError(reason, "Connection failed");
+    })
   }
 
 }

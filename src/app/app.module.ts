@@ -6,7 +6,6 @@ import { MyApp } from './app.component';
 
 import { SettingsPage } from '../pages/settings/settings';
 import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
 import { SettingsConnectionPage} from '../pages/settings-connection/settings-connection'
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -23,7 +22,6 @@ import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor'
     MyApp,
     SettingsPage,
     HomePage,
-    TabsPage,
     SettingsConnectionPage
   ],
   imports: [
@@ -33,7 +31,8 @@ import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor'
       iconMode: 'ios',
       modalEnter: 'modal-slide-in',
       modalLeave: 'modal-slide-out',
-      mode: 'ios'
+      mode: 'ios',
+      tabsPlacement: 'top'
     }),
     IonicStorageModule.forRoot()
   ],
@@ -42,7 +41,6 @@ import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor'
     MyApp,
     SettingsPage,
     HomePage,
-    TabsPage,
     SettingsConnectionPage
   ],
   providers: [
@@ -54,10 +52,10 @@ import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor'
     SettingsProvider,
     {
       provide: HttpInterceptor,
-      useFactory: (backend: XHRBackend, options: RequestOptions, errorService: ErrorDialogProvider) => {
-        return new HttpInterceptor(backend, options, errorService);
+      useFactory: (backend: XHRBackend, options: RequestOptions) => {
+        return new HttpInterceptor(backend, options);
       },
-      deps: [XHRBackend, RequestOptions, ErrorDialogProvider, AlertController]
+      deps: [XHRBackend, RequestOptions, AlertController]
     }
   ]
 })
