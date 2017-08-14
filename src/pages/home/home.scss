@@ -19,4 +19,51 @@ page-home {
   .bold {
     font-weight: bold;
   }
+
+  .progress-bar {
+    .container{
+      width: 100%;
+      height: 50px;
+    }
+
+    .wrapper {
+      width: 60%;
+      border: 3px solid #488aff;
+      border-radius: 16px;
+      height: 30px;
+      margin: 0 auto;
+      padding: 3px;
+    }
+
+    .fill-bar {
+      width: 0;
+      background: #488aff;
+      border-radius: 10px;
+      height: 100%
+    }
+
+    .text-value {
+      width: 60%;
+      margin: 0 auto;
+      text-align: right;
+    }
+  }
+
+  .outer {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  }
+
+  .middle {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .inner{
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+  }
 }

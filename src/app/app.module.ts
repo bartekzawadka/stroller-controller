@@ -6,7 +6,8 @@ import { MyApp } from './app.component';
 
 import { SettingsPage } from '../pages/settings/settings';
 import { HomePage } from '../pages/home/home';
-import { SettingsConnectionPage} from '../pages/settings-connection/settings-connection'
+import { SettingsConnectionPage} from '../pages/settings-connection/settings-connection';
+import { ImagesPage} from "../pages/images/images";
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -15,14 +16,15 @@ import { HttpModule, XHRBackend, RequestOptions} from '@angular/http';
 import { ErrorDialogProvider } from '../providers/error-dialog/error-dialog';
 import { SettingsProvider } from '../providers/settings-provider/settings-provider';
 import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor';
-
+import { CameraProvider } from '../providers/camera-provider/camera-provider';
 
 @NgModule({
   declarations: [
     MyApp,
     SettingsPage,
     HomePage,
-    SettingsConnectionPage
+    SettingsConnectionPage,
+    ImagesPage
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor'
     MyApp,
     SettingsPage,
     HomePage,
-    SettingsConnectionPage
+    SettingsConnectionPage,
+    ImagesPage
   ],
   providers: [
     StatusBar,
@@ -56,7 +59,8 @@ import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor'
         return new HttpInterceptor(backend, options);
       },
       deps: [XHRBackend, RequestOptions, AlertController]
-    }
+    },
+    CameraProvider
   ]
 })
 export class AppModule {}

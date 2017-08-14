@@ -13,6 +13,8 @@ import {KeyValueItem} from "../../models/key-value-item";
 @Injectable()
 export class StrollerServiceProvider {
 
+  private token: string;
+
   constructor(public http: HttpInterceptor, public settingsService: SettingsProvider) {
   }
 
@@ -52,7 +54,18 @@ export class StrollerServiceProvider {
 
   }
 
+  private rejectStrollerError(reject: (reason:any)=>void, error: any){
+    if(error && error.error){
+      reject(error.error);
+    }else{
+      reject(error);
+    }
+  }
+
   fetchConfiguration(){
+
+    let me = this;
+
     return new Promise<StrollerSettings>((resolve, reject) => {
       this.getApiUri('config').then(uri=>{
         this.http.get(uri).map(res=>res.json()).subscribe(function(response){
@@ -71,7 +84,7 @@ export class StrollerServiceProvider {
 
           resolve(settings);
         }, function(error){
-          reject(error);
+          me.rejectStrollerError(reject, error);
         });
       }, reason => {
         reject(reason);
@@ -80,6 +93,9 @@ export class StrollerServiceProvider {
   }
 
   sendConfiguration(settings: StrollerSettings){
+
+    let me = this;
+
     return new Promise((resolve, reject) => {
 
       if(!settings){
@@ -99,7 +115,7 @@ export class StrollerServiceProvider {
         this.http.post(uri, config).subscribe(function(response){
           resolve();
         }, function(error){
-          reject(error);
+          me.rejectStrollerError(reject, error);
         });
       }, reason => {
         reject(reason);
@@ -110,6 +126,8 @@ export class StrollerServiceProvider {
   getStatus() {
 
     return new Promise((resolve, reject) => {
+
+      let me = this;
 
       this.getApiUri('status').then(uri => {
         this.http.get(uri).subscribe(function(response){
@@ -122,7 +140,7 @@ export class StrollerServiceProvider {
             reject();
           }
         }, function(error){
-          reject(error);
+          me.rejectStrollerError(reject, error);
         })
       }, reason => {
         reject(reason);
@@ -132,6 +150,9 @@ export class StrollerServiceProvider {
   }
 
   getDirections(){
+
+    let me = this;
+
     return new Promise<Array<KeyValueItem<string>>>((resolve, reject) => {
       this.getApiUri('directions').then(uri=>{
         this.http.get(uri).map(res=>res.json()).subscribe(function(response){
@@ -150,9 +171,95 @@ export class StrollerServiceProvider {
 
           resolve(directions);
         }, function (error) {
-          reject(error);
+          me.rejectStrollerError(reject, error);
         })
       }, reason => reject(reason));
+    });
+  }
+
+  capture(){
+    return new Promise<any>((resolve, reject) => {
+
+      let me = this;
+
+      this.getApiUri('capture').then(uri=>{
+        this.http.get(uri).map(res=>res.json()).subscribe(function(data){
+          if(data.token){
+            me.token = data.token;
+          }
+          resolve();
+        }, function (error) {
+          me.rejectStrollerError(reject, error);
+        })
+      }, reason => reject(reason.json()));
+    });
+  }
+
+  cancelCapturing(){
+
+    let me = this;
+
+    return new Promise<any>((resolve, reject) => {
+      this.getApiUri('capture/cancel').then(uri=>{
+        this.http.post(uri, {
+          token: this.token
+        }).subscribe(function(data){
+          resolve(data);
+        }, function (error) {
+          me.rejectStrollerError(reject, error);
+        })
+      }, reason => reject(reason.json()));
+    });
+  }
+
+  sendImage(image){
+
+    let me = this;
+
+    return new Promise<any>((resolve, reject) => {
+      this.getApiUri('image').then(uri=>{
+
+        let body = {
+          token: this.token,
+          image: image
+        };
+
+        this.http.post(uri, body).map(res=>res.json()).subscribe(function(data){
+          resolve(data);
+        }, function (error) {
+          me.rejectStrollerError(reject, error);
+        })
+      }, reason => reject(reason.json()));
+    });
+  }
+
+  getLastImage() {
+    let me = this;
+
+    return new Promise<any>((resolve, reject) => {
+      this.getApiUri('image').then(uri=>{
+
+        this.http.get(uri).map(res=>res.json()).subscribe(function(data){
+          resolve(data);
+        }, function (error) {
+          me.rejectStrollerError(reject, error);
+        })
+      }, reason => reject(reason.json()));
+    });
+  }
+
+  getImages(){
+    let me = this;
+
+    return new Promise<any>((resolve, reject) => {
+      this.getApiUri('images').then(uri=>{
+
+        this.http.get(uri).map(res=>res.json()).subscribe(function(data){
+          resolve(data);
+        }, function (error) {
+          me.rejectStrollerError(reject, error);
+        })
+      }, reason => reject(reason.json()));
     });
   }
 }
