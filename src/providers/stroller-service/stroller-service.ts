@@ -237,7 +237,7 @@ export class StrollerServiceProvider {
     let me = this;
 
     return new Promise<any>((resolve, reject) => {
-      this.getApiUri('image').then(uri=>{
+      this.getApiUri('image/last').then(uri=>{
 
         this.http.get(uri).map(res=>res.json()).subscribe(function(data){
           resolve(data);
@@ -253,6 +253,21 @@ export class StrollerServiceProvider {
 
     return new Promise<any>((resolve, reject) => {
       this.getApiUri('images').then(uri=>{
+
+        this.http.get(uri).map(res=>res.json()).subscribe(function(data){
+          resolve(data);
+        }, function (error) {
+          me.rejectStrollerError(reject, error);
+        })
+      }, reason => reject(reason.json()));
+    });
+  }
+
+  getImage(id: string){
+    let me = this;
+
+    return new Promise<any>((resolve, reject) => {
+      this.getApiUri('image/'+id).then(uri=>{
 
         this.http.get(uri).map(res=>res.json()).subscribe(function(data){
           resolve(data);

@@ -25,9 +25,9 @@
         <div>
           <button ion-button color="default" full round large (click)="takePhoto()">Zrób zdjęcie 360</button>
         </div>
-        <div>
-          <button ion-button color="default" full round large (click)="showImage()">Pokaż ostatnie zdjęcie</button>
-        </div>
+        <!--<div>-->
+          <!--<button ion-button color="default" full round large (click)="showImage()">Pokaż ostatnie zdjęcie</button>-->
+        <!--</div>-->
         <div>
           <button ion-button color="default" full round large (click)="showImages()">Pokaż zdjęcia</button>
         </div>
@@ -50,22 +50,6 @@
         </div>
         <button ion-button color="default" round large (click)="cancelCapturing()">Anuluj</button>
       </div>
-    </div>
-  </div>
-</ion-content>
-
-<ion-content text-center [hidden]="!isShowingImage">
-  <div class="outer">
-    <div class="middle">
-      <div class="inner" [style.width]="'99%'">
-        <img width="100%" height="300" src="{{imagee[imageIndex].image}}" />
-        <ion-range [(ngModel)]="imageIndex" pin="true" min="0" max="{{imagee.length}}">
-        </ion-range>
-        {{imageIndex}}
-        dataLength: {{(imagee[imageIndex] && imagee[imageIndex].image)?imagee[imageIndex].image.length:''}}
-        <button ion-button color="default" round large (click)="closeImage()">Zamknij</button>
-      </div>
-
     </div>
   </div>
 </ion-content>

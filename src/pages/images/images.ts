@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { LoadingController } from "ionic-angular";
 import {StrollerServiceProvider} from "../../providers/stroller-service/stroller-service";
 import {ErrorDialogProvider} from "../../providers/error-dialog/error-dialog";
+import {ImagePage} from "../image/image";
 
 /**
  * Generated class for the ImagesPage page.
@@ -16,7 +17,7 @@ import {ErrorDialogProvider} from "../../providers/error-dialog/error-dialog";
 })
 export class ImagesPage {
 
-  private images: [{fileName: string, ctime: any, ctimeText: string}];
+  private images: [{id: string, ctime: any, ctimeText: string}];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -47,6 +48,12 @@ export class ImagesPage {
 
   ionViewDidLoad() {
     this.refresh();
+  }
+
+  openImage(id){
+    this.navCtrl.push(ImagePage, {
+      id: id
+    });
   }
 
 }

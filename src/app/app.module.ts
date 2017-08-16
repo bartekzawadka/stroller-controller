@@ -17,6 +17,7 @@ import { ErrorDialogProvider } from '../providers/error-dialog/error-dialog';
 import { SettingsProvider } from '../providers/settings-provider/settings-provider';
 import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor';
 import { CameraProvider } from '../providers/camera-provider/camera-provider';
+import {ImagePage} from "../pages/image/image";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { CameraProvider } from '../providers/camera-provider/camera-provider';
     SettingsPage,
     HomePage,
     SettingsConnectionPage,
-    ImagesPage
+    ImagesPage,
+    ImagePage
   ],
   imports: [
     BrowserModule,
@@ -44,7 +46,8 @@ import { CameraProvider } from '../providers/camera-provider/camera-provider';
     SettingsPage,
     HomePage,
     SettingsConnectionPage,
-    ImagesPage
+    ImagesPage,
+    ImagePage
   ],
   providers: [
     StatusBar,

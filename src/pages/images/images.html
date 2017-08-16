@@ -8,6 +8,11 @@
 
   <ion-navbar>
     <ion-title>Images</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon name="ios-refresh"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -15,8 +20,8 @@
 
 <ion-content>
   <ion-list>
-    <button ion-item *ngFor="let p of images" icon-start>
-      {{p.fileName}}
+    <button ion-item *ngFor="let p of images" icon-start (click)="openImage(p.id)">
+      {{p.ctimeText}}
     </button>
   </ion-list>
 </ion-content>

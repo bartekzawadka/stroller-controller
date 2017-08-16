@@ -38,23 +38,6 @@ export class HomePage {
     this.refresh();
   }
 
-  closeImage(){
-    this.isShowingImage = false;
-    this.isCapturing = false;
-  }
-
-  showImage(){
-    this.strollerService.getLastImage().then((data)=>{
-
-      this.imagee = data.image;
-      this.isShowingImage = true;
-      this.isCapturing = false;
-
-    }, (e)=>{
-      this.errorService.showError(e, 'Nie można wyświetlić zdjęcia');
-    })
-  }
-
   showImages(){
     this.navCtrl.push(ImagesPage);
   }
