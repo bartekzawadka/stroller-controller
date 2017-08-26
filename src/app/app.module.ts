@@ -18,6 +18,8 @@ import { SettingsProvider } from '../providers/settings-provider/settings-provid
 import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor';
 import { CameraProvider } from '../providers/camera-provider/camera-provider';
 import {ImagePage} from "../pages/image/image";
+import { ImageViewerComponent } from '../components/image-viewer/image-viewer';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import {ImagePage} from "../pages/image/image";
     HomePage,
     SettingsConnectionPage,
     ImagesPage,
-    ImagePage
+    ImagePage,
+    ImageViewerComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,7 @@ import {ImagePage} from "../pages/image/image";
     StrollerServiceProvider,
     ErrorDialogProvider,
     SettingsProvider,
+    ScreenOrientation,
     {
       provide: HttpInterceptor,
       useFactory: (backend: XHRBackend, options: RequestOptions) => {

@@ -21,7 +21,11 @@ export class CameraProvider {
   startCamera() {
     return new Promise((resolve, reject) => {
       try {
-        window['cordova'].plugins.CameraPlus.startCamera();
+        //resolve();
+        window['cordova'].plugins.CameraPlus.startCamera({
+          quality: 100,
+          correctOrientation: true
+        });
 
         let firstPicCaptured = () =>{
           // Waiting one second for camera to adjust exposure
@@ -57,6 +61,7 @@ export class CameraProvider {
 
     return new Promise<string>((resolve, reject) => {
 
+      //resolve('1234');
       let capture = () => {
         window['cordova'].plugins.CameraPlus.getJpegImage(function (image) {
           resolve(image);
@@ -74,7 +79,7 @@ export class CameraProvider {
       } else {
         capture();
       }
-    })
+     })
 
   }
 }

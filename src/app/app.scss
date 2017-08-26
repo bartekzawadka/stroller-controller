@@ -22,3 +22,7 @@
 .scroll-content {
   overflow-y: hidden !important;
 }
+
+.scrollable .scroll-content {
+  overflow-y: auto !important;
+}

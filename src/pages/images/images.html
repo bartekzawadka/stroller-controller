@@ -18,10 +18,11 @@
 </ion-header>
 
 
-<ion-content>
-  <ion-list>
-    <button ion-item *ngFor="let p of images" icon-start (click)="openImage(p.id)">
-      {{p.ctimeText}}
-    </button>
-  </ion-list>
+<ion-content class="scrollable">
+  <!--<ion-scroll style="height: 400px !important" direction="xy">-->
+    <ion-list>
+      <button ion-item *ngFor="let p of images" icon-start (click)="openImage(p.id)">
+        {{p.ctimeText}}</button>
+    </ion-list>
+  <!--</ion-scroll>-->
 </ion-content>
