@@ -13,7 +13,6 @@
 
 <ion-content>
   <ion-list>
-    <button ion-item (click)="openConnectionSettings()">Connection settings</button>
     <ion-item>
       <ion-label>Rotation direction</ion-label>
       <ion-select [(ngModel)]="settings.direction" disabled="{{!configurationEnabled}}">

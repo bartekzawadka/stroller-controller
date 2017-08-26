@@ -189,6 +189,8 @@ export class HomePage {
         loader.dismiss();
       }, error => {
         loader.dismiss();
+        this.statusData = undefined;
+        this.getStatusInfo(undefined);
         this.errorService.showError(error);
       });
     });

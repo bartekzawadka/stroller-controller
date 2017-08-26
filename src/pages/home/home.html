@@ -23,13 +23,15 @@
           <span *ngIf="statusInfo" [style.color]="statusInfo.color">{{statusInfo.title}}</span>
         </ion-list>
         <div>
-          <button ion-button color="default" outline full round large (click)="takePhoto()">Zrób zdjęcie 360</button>
+          <button ion-button color="default" outline full round large (click)="takePhoto()"
+            [disabled]="!statusData || statusData.status !=='ready'">Zrób zdjęcie 360</button>
         </div>
         <!--<div>-->
           <!--<button ion-button color="default" full round large (click)="showImage()">Pokaż ostatnie zdjęcie</button>-->
         <!--</div>-->
         <div>
-          <button ion-button color="default" outline full round large (click)="showImages()">Pokaż zdjęcia</button>
+          <button ion-button color="default" outline full round large (click)="showImages()"
+            [disabled]="!statusData || !statusData.status || statusData.status === ''">Pokaż zdjęcia</button>
         </div>
         <div>
           <button ion-button color="danger" outline full round large (click)="forceReleaseStroller()"

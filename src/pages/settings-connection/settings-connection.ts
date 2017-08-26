@@ -43,11 +43,34 @@ export class SettingsConnectionPage {
   }
 
   testConnection(){
-    this.strollerService.getStatus().then(() => {
-      this.errorService.showInfo("Connected", "Connection established successfully");
-    }, reason=>{
-      this.errorService.showError(reason, "Connection failed");
-    })
+
+    let me = this;
+
+    this.settingsService.getPreferences().then(data=>{
+
+      let previousSettings = data;
+
+      this.settingsService.setPreferences(this.preferences).then(ok =>{
+
+        this.strollerService.getStatus().then(() => {
+          this.errorService.showInfo("Connected", "Connection established successfully");
+        }, reason=>{
+
+          this.errorService.showError(reason, "Connection failed");
+
+          this.settingsService.setPreferences(previousSettings).then(()=>{
+            me.preferences = previousSettings;
+          }, failure =>{
+            this.errorService.showError(failure, "Restoring settings failed");
+          });
+        });
+
+      }, fail => {
+        this.errorService.showError(fail, "Updating settings failed");
+      });
+    }, error =>{
+      this.errorService.showError(error, "Reading settings failure");
+    });
   }
 
 }
