@@ -27,15 +27,6 @@ export class ErrorDialogProvider {
     alert.present();
   }
 
-  // showError(title: string, message: string){
-  //   let alert = this.alertCtrl.create({
-  //     title: title,
-  //     message: message,
-  //     buttons: ['OK']
-  //   });
-  //   alert.present();
-  // }
-
   showInfo(title: string, message: string){
     let alert = this.alertCtrl.create({
       title: title,
@@ -43,5 +34,29 @@ export class ErrorDialogProvider {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  showConfirmation(
+    title: string, message: string,
+    agreeButtonText: string = "OK",
+    disagreeButtonText:string = "Cancel"){
+
+    return new Promise(((resolve, reject) => {
+      let alert = this.alertCtrl.create({
+        title: title,
+        message: message,
+        buttons: [
+          {
+            text: disagreeButtonText,
+            handler: reject
+          },
+          {
+            text: agreeButtonText,
+            handler: resolve
+          }
+        ]
+      });
+      alert.present();
+    }))
   }
 }

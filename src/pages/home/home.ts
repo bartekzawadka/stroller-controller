@@ -160,6 +160,22 @@ export class HomePage {
     this.statusInfo = statusInfo;
   }
 
+  forceReleaseStroller(){
+
+    let me = this;
+
+    this.errorService.showConfirmation("Device busy",
+      "Releasing currently working device may impact result images. Do you want to continue anyway?",
+      "Yes").then(()=>{
+      this.strollerService.cancelCapturing(true).then(()=>{
+        me.isCapturing = false;
+        me.refresh();
+      }, (e)=>{
+        this.errorService.showError(e);
+      })
+    }, ()=>{});
+  }
+
   refresh(){
     let loader = this.loaderController.create({
       content: "Connecting..."

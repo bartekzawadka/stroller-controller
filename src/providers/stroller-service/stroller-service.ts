@@ -195,14 +195,15 @@ export class StrollerServiceProvider {
     });
   }
 
-  cancelCapturing(){
+  cancelCapturing(force: boolean = false){
 
     let me = this;
 
     return new Promise<any>((resolve, reject) => {
       this.getApiUri('capture/cancel').then(uri=>{
         this.http.post(uri, {
-          token: this.token
+          token: this.token,
+          force: force
         }).subscribe(function(data){
           resolve(data);
         }, function (error) {
