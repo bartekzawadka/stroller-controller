@@ -49,6 +49,9 @@ export class HomePage {
         this.capProgress = 0;
       }, e=>{
         this.errorService.showError(e);
+        this.isCapturing = false;
+        this.capProgressText = "0%";
+        this.capProgress = 0;
       });
   }
 
@@ -106,13 +109,16 @@ export class HomePage {
                     me.errorService.showInfo('Completed', 'Image acquired successfully');
                     me.stopCapturing(false);
                   } else if (status == 1) {
-                      getImage();
+                    getImage();
                   } else {
                     me.errorService.showError("Unknown status: " + status);
                   }
                 } else {
                   me.errorService.showError("data.status is undefined!!!");
                 }
+              }, (ee) => {
+                me.errorService.showError(ee);
+                me.stopCapturing(false);
               })
           }, function (e) {
             me.errorService.showError(e);
@@ -183,7 +189,6 @@ export class HomePage {
     loader.present().then(value => {
 
       this.strollerService.getStatus().then(data => {
-        //console.log(data);
         this.statusData = <SystemStatus> data;
         this.getStatusInfo(this.statusData.status);
         loader.dismiss();

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import {DateTime, NavController, NavParams} from 'ionic-angular';
 import { LoadingController } from "ionic-angular";
 import {StrollerServiceProvider} from "../../providers/stroller-service/stroller-service";
 import {ErrorDialogProvider} from "../../providers/error-dialog/error-dialog";
@@ -17,7 +17,7 @@ import {ImagePage} from "../image/image";
 })
 export class ImagesPage {
 
-  private images: [{id: string, ctime: any, ctimeText: string}];
+  private images: [{_id: string, thumbnail: string, createdAt: DateTime}];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -36,7 +36,6 @@ export class ImagesPage {
     loader.present().then(value => {
 
       this.strollerService.getImages().then(data => {
-        //console.log(data);
         me.images = data;
         loader.dismiss();
       }, error => {

@@ -1,3 +1,17 @@
 page-images {
+  ion-avatar img {
+    width: 100% !important;
+    max-height: 60px !important;
+    height: 100% !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+    max-width: 100px !important;
+  }
 
+  ion-avatar {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+  }
 }

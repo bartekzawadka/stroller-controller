@@ -57,7 +57,9 @@ export class StrollerServiceProvider {
   private rejectStrollerError(reject: (reason:any)=>void, error: any){
     if(error && error.error){
       reject(error.error);
-    }else{
+    } else if(error && error.message){
+      reject(error.message);
+    } else{
       reject(error);
     }
   }

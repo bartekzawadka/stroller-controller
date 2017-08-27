@@ -19,10 +19,13 @@
 
 
 <ion-content class="scrollable">
-  <!--<ion-scroll style="height: 400px !important" direction="xy">-->
     <ion-list>
-      <button ion-item *ngFor="let p of images" icon-start (click)="openImage(p.id)">
-        {{p.ctimeText}}</button>
+
+      <button ion-item *ngFor="let p of images" icon-start (click)="openImage(p._id)">
+        <ion-avatar item-start *ngIf="p.thumbnail">
+          <img src="{{p.thumbnail}}">
+        </ion-avatar>
+        {{p.createdAt | date: "yyyy-MM-dd HH:mm:ss"}}
+      </button>
     </ion-list>
-  <!--</ion-scroll>-->
 </ion-content>
