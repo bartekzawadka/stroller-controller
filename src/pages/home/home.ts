@@ -22,11 +22,10 @@ export class HomePage {
   statusData: SystemStatus;
   statusInfo: {};
   isCapturing: boolean = false;
+  isCancellationPending: boolean = false;
   capProgress: number = 0;
   capProgressText: string = "0%";
   isShowingImage: boolean = false;
-  imagee: [{index: number, image: string}] = [{index: 0, image: null}];
-  imageIndex: number = 0;
 
   constructor(public navCtrl: NavController,
               public strollerService: StrollerServiceProvider,
@@ -35,6 +34,9 @@ export class HomePage {
               public cameraService: CameraProvider
               ) {
     this.getStatusInfo(null);
+  }
+
+  ionViewDidEnter(){
     this.refresh();
   }
 
@@ -43,6 +45,9 @@ export class HomePage {
   }
 
   cancelCapturing(){
+
+    this.isCancellationPending = true;
+
       this.strollerService.cancelCapturing().then(()=>{
         this.isCapturing = false;
         this.capProgressText = "0%";
@@ -58,6 +63,7 @@ export class HomePage {
   stopCapturing(sendCancel: boolean){
     this.capProgressText = "0%";
     this.capProgress = 0;
+    this.isCancellationPending = false;
 
     let me = this;
 
@@ -86,11 +92,16 @@ export class HomePage {
     let me = this;
 
     this.isCapturing = true;
+    this.isCancellationPending = false;
 
     let cameraEstablished = function(){
       me.strollerService.capture().then(()=>{
 
         let getImage = function() {
+
+          if(me.isCancellationPending){
+            return;
+          }
 
           me.cameraService.takePicture().then((image) => {
 
@@ -117,7 +128,9 @@ export class HomePage {
                   me.errorService.showError("data.status is undefined!!!");
                 }
               }, (ee) => {
-                me.errorService.showError(ee);
+                if(!me.isCancellationPending) {
+                  me.errorService.showError(ee);
+                }
                 me.stopCapturing(false);
               })
           }, function (e) {

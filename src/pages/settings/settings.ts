@@ -45,12 +45,18 @@ export class SettingsPage {
   }
 
   saveSettings(){
+    let loader = this.loaderController.create({
+      content: "Updating device configuration..."
+    });
+    loader.present().then(()=>{
       this.strollerService.sendConfiguration(this.settings).then(()=>{
-        this.errorService.showInfo("Completed", "Configuration updated successfully");
+        loader.dismiss();
         this.navCtrl.pop();
       }, reason => {
+        loader.dismiss();
         this.errorService.showError(reason);
       });
+    })
   }
 
   getDirections(){
