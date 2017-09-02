@@ -22,7 +22,10 @@
       <ion-input type="tel" [(ngModel)]="preferences.port"></ion-input>
     </ion-item>
     <p padding>
-      <button ion-button color="default" round full (click)="testConnection()" padding>Test connection</button>
+      <button ion-button color="default" outline icon-left round [style.width]="'100%'" (click)="testConnection()" padding>
+        <ion-icon name="log-in"></ion-icon>
+        Test connection
+      </button>
     </p>
   </ion-list>
 </ion-content>

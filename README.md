@@ -7,6 +7,6 @@
 - [x] Add database support
 - [ ] Add 'Processing image' loader support
 - [x] Refresh main screen once view appears
-- [ ] Improve look and feel with icons
+- [x] Improve look and feel with icons
 - [x] Add loader for updating settings
-- [ ] Re-center image loading percentage SPAN. Fix for smaller resolutions
+- [x] Re-center image loading percentage SPAN. Fix for smaller resolutions

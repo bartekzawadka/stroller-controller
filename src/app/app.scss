@@ -15,6 +15,14 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
+.vertical-align-content > *
+{
+  display: flex!important;
+  align-content: center!important;
+  align-items: center!important;
+  overflow: hidden;
+}
+
 .alert-message{
   overflow-y: hidden !important;
 }
@@ -25,4 +33,27 @@
 
 .scrollable .scroll-content {
   overflow-y: auto !important;
+}
+
+.vertical-icon-button {
+  height: inherit;
+  contain: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.vertical-icon-button.fixed-width {
+  width: 250px;
+}
+
+.vertical-icon-button.full-width {
+  width: 100%;
+}
+
+.center-item {
+  margin: 0 auto !important;
+}
+
+.title-light > .toolbar-title{
+  font-weight: 400 !important;
 }

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, LoadingController } from 'ionic-angular';
+import {NavController, LoadingController} from 'ionic-angular';
 import {StrollerServiceProvider} from '../../providers/stroller-service/stroller-service';
 import {ErrorDialogProvider} from '../../providers/error-dialog/error-dialog';
 import {CameraProvider} from "../../providers/camera-provider/camera-provider";
 import { ImagesPage} from "../images/images";
+import {ImagePage} from "../image/image";
 
 class SystemStatus{
   status: string;
@@ -19,8 +20,11 @@ class SystemStatus{
 
 export class HomePage {
 
-  statusData: SystemStatus;
-  statusInfo: {};
+  statusData: SystemStatus = new SystemStatus();
+  statusInfo: {
+    title: string,
+    color: string
+  };
   isCapturing: boolean = false;
   isCancellationPending: boolean = false;
   capProgress: number = 0;
@@ -31,8 +35,7 @@ export class HomePage {
               public strollerService: StrollerServiceProvider,
               public errorService: ErrorDialogProvider,
               public loaderController: LoadingController,
-              public cameraService: CameraProvider
-              ) {
+              public cameraService: CameraProvider) {
     this.getStatusInfo(null);
   }
 
@@ -117,8 +120,13 @@ export class HomePage {
                   let status = parseInt(data.status);
 
                   if (status == 0) {
-                    me.errorService.showInfo('Completed', 'Image acquired successfully');
+                    //me.errorService.showInfo('Completed', 'Image acquired successfully');
                     me.stopCapturing(false);
+                    if(data.id){
+                      me.navCtrl.push(ImagePage, {
+                        id: data.id
+                      });
+                    }
                   } else if (status == 1) {
                     getImage();
                   } else {
@@ -163,16 +171,16 @@ export class HomePage {
 
     switch(status){
       case "ready":
-        statusInfo.title = "GOTOWY";
+        statusInfo.title = "READY";
         statusInfo.color = "green";
         break;
       case "busy":
-        statusInfo.title = "ZAJĘTY";
+        statusInfo.title = "BUSY - ACQUISITION PENDING";
         statusInfo.color = "red";
         break;
       default:
-        statusInfo.title = "NIEZNANY";
-        statusInfo.color = "gray";
+        statusInfo.title = "STATUS UNKNOWN";
+        statusInfo.color = "#333";
         break;
     }
 

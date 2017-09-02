@@ -14,40 +14,51 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content text-center [hidden]="isCapturing || isShowingImage">
-  <div class="outer">
-    <div class="middle">
-      <div class="inner">
-        <ion-list no-lines class="bold">
-          <span>Status: </span>
-          <span *ngIf="statusInfo" [style.color]="statusInfo.color">{{statusInfo.title}}</span>
-        </ion-list>
-        <div>
-          <button ion-button color="default" outline full round large (click)="takePhoto()"
-            [disabled]="!statusData || statusData.status !=='ready'">Zrób zdjęcie 360</button>
-        </div>
-        <!--<div>-->
-          <!--<button ion-button color="default" full round large (click)="showImage()">Pokaż ostatnie zdjęcie</button>-->
-        <!--</div>-->
-        <div>
-          <button ion-button color="default" outline full round large (click)="showImages()"
-            [disabled]="!statusData || !statusData.status || statusData.status === ''">Pokaż zdjęcia</button>
-        </div>
-        <div>
-          <button ion-button color="danger" outline full round large (click)="forceReleaseStroller()"
-                  *ngIf="statusData && statusData.status === 'busy'">
-            Zwolnij urządzenie
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+<ion-content class="vertical-align-content" text-center [hidden]="isCapturing || isShowingImage">
+
+  <ion-grid>
+    <ion-row>
+      <ion-col col-md-6 *ngIf="statusData && statusData.status !== 'busy'">
+        <button ion-button class="vertical-icon-button full-width" large outline
+                (click)="takePhoto()" [disabled]="!statusData || statusData.status !=='ready'">
+          <div>
+            <ion-icon name="aperture" style="font-size: 80px"></ion-icon>
+            <label style="display: block;">CAPTURE 360</label>
+          </div>
+        </button>
+      </ion-col>
+      <ion-col col-md-6 *ngIf="statusData && statusData.status === 'busy'">
+        <button ion-button class="vertical-icon-button full-width" large outline color="danger"
+                (click)="forceReleaseStroller()">
+          <div>
+            <ion-icon name="hand" style="font-size: 80px"></ion-icon>
+            <label style="display: block;">RELEASE DEVICE</label>
+          </div>
+        </button>
+      </ion-col>
+      <ion-col ngClass="{'col-md-6': statusData && statusData.status, 'col-md-12': !statusData || !statusData.status}">
+        <button ion-button class="vertical-icon-button full-width" large outline
+                (click)="showImages()" [disabled]="!statusData || !statusData.status || statusData.status === ''">
+          <div>
+            <ion-icon name="photos" style="font-size: 80px"></ion-icon>
+            <label style="display: block;">BROWSE IMAGES</label>
+          </div>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
-<ion-content text-center [hidden]="!isCapturing">
-  <div class="outer">
-    <div class="middle">
-      <div class="inner" [style.width]="'99%'">
+<ion-content class="vertical-align-content" text-center [hidden]="!isCapturing">
+
+  <ion-grid>
+    <ion-row col-md-12 align-items-center>
+      <ion-navbar margin class="navbar-white-background">
+        <ion-title class="title-light">360 image acquisition pending</ion-title>
+      </ion-navbar>
+    </ion-row>
+    <ion-row>
+      <ion-col col-md-12>
         <div class="progress-bar">
           <div class="container">
             <div class="wrapper">
@@ -56,8 +67,21 @@
             <div class="text-value"><span style="width: 100%">{{capProgressText}}</span></div>
           </div>
         </div>
-        <button ion-button color="default" round large (click)="cancelCapturing()">Anuluj</button>
-      </div>
-    </div>
-  </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <button ion-button outline icon-left round large (click)="cancelCapturing()">
+          <ion-icon name="remove-circle-outline"></ion-icon>
+          Cancel
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
+<ion-footer>
+  <ion-navbar text-center>
+    <span [style.color]="statusInfo.color">{{statusInfo.title}}</span>
+  </ion-navbar>
+</ion-footer>

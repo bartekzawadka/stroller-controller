@@ -1,12 +1,4 @@
 page-home {
-  .vertical-align-content > *
-  {
-    display: flex!important;
-    align-content: center!important;
-    align-items: center!important;
-    overflow: hidden;
-  }
-
   .ion-row-large{
     height: 80px;
   }
@@ -49,21 +41,16 @@ page-home {
     }
   }
 
-  .outer {
-    display: table;
-    position: absolute;
-    height: 100%;
-    width: 100%;
+  ion-footer.status-footer > * > .toolbar-background  {
+    border: 0;
+    background: #f53d3d;
   }
 
-  .middle {
-    display: table-cell;
-    vertical-align: middle;
+  ion-footer.status-footer > * > .toolbar-content > * {
+    color: #eee;
   }
 
-  .inner{
-    margin-left: auto;
-    margin-right: auto;
-    width: 70%;
+  ion-navbar.navbar-white-background .toolbar-background{
+    background: white !important;
   }
 }

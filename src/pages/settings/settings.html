@@ -25,7 +25,10 @@
       <ion-input type="tel" [(ngModel)]="settings.stepAngle" disabled="{{!configurationEnabled}}"></ion-input>
     </ion-item>
     <p padding>
-      <button ion-button color="default" full round (click)="saveSettings()" [disabled]="!configurationEnabled">Save settings</button>
+      <button ion-button color="default" round outline icon-left [style.width]="'100%'" (click)="saveSettings()" [disabled]="!configurationEnabled">
+        <ion-icon name="lock"></ion-icon>
+        Save settings
+      </button>
     </p>
   </ion-list>
 </ion-content>
