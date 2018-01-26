@@ -25,19 +25,19 @@ export class CameraProvider {
         window['cordova'].plugins.CameraPlus.startCamera({
           quality: 100,
           correctOrientation: true
+        }, () => {
+          let firstPicCaptured = () =>{
+            // Waiting one second for camera to adjust exposure
+            setTimeout(() => {
+              this.cameraStarted = true;
+              resolve();
+            }, 4000);
+          };
+
+          // Taking first shot - always failed because buffer is null. Filled with data only after "getJpegImage"
+          // is called first time;
+          window['cordova'].plugins.CameraPlus.getJpegImage(firstPicCaptured, firstPicCaptured);
         });
-
-        let firstPicCaptured = () =>{
-          // Waiting one second for camera to adjust exposure
-          setTimeout(() => {
-            this.cameraStarted = true;
-            resolve();
-          }, 1000);
-        };
-
-        // Taking first shot - always failed because buffer is null. Filled with data only after "getJpegImage"
-        // is called first time;
-        window['cordova'].plugins.CameraPlus.getJpegImage(firstPicCaptured, firstPicCaptured);
       }
       catch (e) {
         reject(e);

@@ -100,6 +100,8 @@ export class HomePage {
     let cameraEstablished = function(){
       me.strollerService.capture().then(()=>{
 
+        let startCount = 0;
+
         let getImage = function() {
 
           if(me.isCancellationPending){
@@ -109,6 +111,11 @@ export class HomePage {
           me.cameraService.takePicture().then((image) => {
 
             image = "data:image/jpeg;base64," + image;
+            if(startCount < 5) {
+              startCount++;
+              getImage();
+              return;
+            }
 
               me.strollerService.sendImage(image).then((data) => {
                 if (data.progress) {
