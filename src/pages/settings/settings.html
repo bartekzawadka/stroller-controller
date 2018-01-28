@@ -24,6 +24,12 @@
       <ion-label>Unit angle of rotation</ion-label>
       <ion-input type="tel" [(ngModel)]="settings.stepAngle" disabled="{{!configurationEnabled}}"></ion-input>
     </ion-item>
+    <ion-item>
+      <ion-label>External camera</ion-label>
+      <ion-select [(ngModel)]="settings.camera" disabled="{{!configurationEnabled}}">
+        <ion-option *ngFor="let item of settings.cameras" value="{{item.value}}">{{item.key}}</ion-option>
+      </ion-select>
+    </ion-item>
     <p padding>
       <button ion-button color="default" round outline icon-left [style.width]="'100%'" (click)="saveSettings()" [disabled]="!configurationEnabled">
         <ion-icon name="lock"></ion-icon>

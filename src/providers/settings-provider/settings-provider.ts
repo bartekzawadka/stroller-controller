@@ -3,6 +3,7 @@ import {HttpInterceptor} from "../http-interceptor/http-interceptor";
 import {Preferences} from "../../models/preferences";
 import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
+import {StrollerSettings} from "../../models/stroller-settings";
 
 /*
   Generated class for the SettingsProvider provider.
@@ -12,6 +13,8 @@ import 'rxjs/add/operator/map';
 */
 @Injectable()
 export class SettingsProvider {
+
+  private strollerSettings: StrollerSettings = new StrollerSettings();
 
   constructor(public http: HttpInterceptor, private storage: Storage) {
   }
@@ -60,4 +63,11 @@ export class SettingsProvider {
     }));
   }
 
+  public getStrollerSettings() {
+    return this.strollerSettings;
+  }
+
+  public setStrollerSettings(settings: StrollerSettings) {
+    this.strollerSettings = settings;
+  }
 }

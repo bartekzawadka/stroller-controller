@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {NavController, LoadingController} from 'ionic-angular';
 import {StrollerServiceProvider} from '../../providers/stroller-service/stroller-service';
 import {ErrorDialogProvider} from '../../providers/error-dialog/error-dialog';
 import {CameraProvider} from "../../providers/camera-provider/camera-provider";
-import { ImagesPage} from "../images/images";
+import {ImagesPage} from "../images/images";
 import {ImagePage} from "../image/image";
+import {SettingsProvider} from "../../providers/settings-provider/settings-provider";
+import * as io from "socket.io-client";
 
-class SystemStatus{
+class SystemStatus {
   status: string;
 
-  constructor(){}
+  constructor() {
+  }
 }
 
 @Component({
@@ -35,35 +38,36 @@ export class HomePage {
               public strollerService: StrollerServiceProvider,
               public errorService: ErrorDialogProvider,
               public loaderController: LoadingController,
-              public cameraService: CameraProvider) {
+              public cameraService: CameraProvider,
+              private settingsService: SettingsProvider) {
     this.getStatusInfo(null);
   }
 
-  ionViewDidEnter(){
+  ionViewDidEnter() {
     this.refresh();
   }
 
-  showImages(){
+  showImages() {
     this.navCtrl.push(ImagesPage);
   }
 
-  cancelCapturing(){
+  cancelCapturing() {
 
     this.isCancellationPending = true;
 
-      this.strollerService.cancelCapturing().then(()=>{
-        this.isCapturing = false;
-        this.capProgressText = "0%";
-        this.capProgress = 0;
-      }, e=>{
-        this.errorService.showError(e);
-        this.isCapturing = false;
-        this.capProgressText = "0%";
-        this.capProgress = 0;
-      });
+    this.strollerService.cancelCapturing().then(() => {
+      this.isCapturing = false;
+      this.capProgressText = "0%";
+      this.capProgress = 0;
+    }, e => {
+      this.errorService.showError(e);
+      this.isCapturing = false;
+      this.capProgressText = "0%";
+      this.capProgress = 0;
+    });
   }
 
-  stopCapturing(sendCancel: boolean){
+  stopCapturing(sendCancel: boolean) {
     this.capProgressText = "0%";
     this.capProgress = 0;
     this.isCancellationPending = false;
@@ -71,16 +75,16 @@ export class HomePage {
     let me = this;
 
     let done = (e) => {
-      if(e)
+      if (e)
         me.errorService.showError(e, 'Closing camera failed');
-      if(sendCancel){
-        me.strollerService.cancelCapturing().then(()=>{
+      if (sendCancel) {
+        me.strollerService.cancelCapturing().then(() => {
           me.isCapturing = false;
 
-        }, e=>{
+        }, e => {
           me.errorService.showError(e);
         });
-      }else{
+      } else {
         me.isCapturing = false;
       }
     };
@@ -90,93 +94,108 @@ export class HomePage {
     });
   }
 
-  takePhoto(){
+  takePhoto() {
 
     let me = this;
 
     this.isCapturing = true;
     this.isCancellationPending = false;
 
-    let cameraEstablished = function(){
-      me.strollerService.capture().then(()=>{
+    let settings = me.settingsService.getStrollerSettings();
+
+    let run = function () {
+      me.strollerService.capture().then(() => {
 
         let startCount = 0;
 
-        let getImage = function() {
+        let getImage = function () {
 
-          if(me.isCancellationPending){
+          if (me.isCancellationPending) {
             return;
           }
 
-          me.cameraService.takePicture().then((image) => {
+          if(settings && settings.camera){
+            me.sendImage(null, getImage);
+          }else{
+            me.cameraService.takePicture().then((image) => {
 
-            image = "data:image/jpeg;base64," + image;
-            if(startCount < 5) {
-              startCount++;
-              getImage();
-              return;
-            }
+              image = "data:image/jpeg;base64," + image;
+              if (startCount < 5) {
+                startCount++;
+                getImage();
+                return;
+              }
 
-              me.strollerService.sendImage(image).then((data) => {
-                if (data.progress) {
-                  me.capProgress = data.progress;
-                  me.capProgressText = data.progress + "%";
-                }
-
-                if (data.hasOwnProperty("status")) {
-                  let status = parseInt(data.status);
-
-                  if (status == 0) {
-                    //me.errorService.showInfo('Completed', 'Image acquired successfully');
-                    me.stopCapturing(false);
-                    if(data.id){
-                      me.navCtrl.push(ImagePage, {
-                        id: data.id
-                      });
-                    }
-                  } else if (status == 1) {
-                    getImage();
-                  } else {
-                    me.errorService.showError("Unknown status: " + status);
-                  }
-                } else {
-                  me.errorService.showError("data.status is undefined!!!");
-                }
-              }, (ee) => {
-                if(!me.isCancellationPending) {
-                  me.errorService.showError(ee);
-                }
-                me.stopCapturing(false);
-              })
-          }, function (e) {
-            me.errorService.showError(e);
-            me.stopCapturing(true);
-          });
+              me.sendImage(image, getImage);
+            }, function (e) {
+              me.errorService.showError(e);
+              me.stopCapturing(true);
+            });
+          }
         };
 
         getImage();
 
-      }, (e)=>{
+      }, (e) => {
         me.errorService.showError(e);
         me.stopCapturing(false);
       });
     };
 
-    this.cameraService.startCamera().then(()=>{
-      cameraEstablished();
-    }, e =>{
-      this.errorService.showError(e);
-    })
+    if (settings && settings.camera) {
+      run();
+    } else {
+      this.cameraService.startCamera().then(() => {
+        run();
+      }, e => {
+        this.errorService.showError(e);
+      });
+    }
   }
 
-  getStatusInfo(status: string){
+  private sendImage(image, getImage){
+    let me = this;
+    this.strollerService.sendImage(image).then((data) => {
+      if (data.progress) {
+        me.capProgress = data.progress;
+        me.capProgressText = data.progress + "%";
+      }
+
+      if (data.hasOwnProperty("status")) {
+        let status = parseInt(data.status);
+
+        if (status == 0) {
+          //me.errorService.showInfo('Completed', 'Image acquired successfully');
+          me.stopCapturing(false);
+          if (data.id) {
+            me.navCtrl.push(ImagePage, {
+              id: data.id
+            });
+          }
+        } else if (status == 1) {
+          getImage();
+        } else {
+          me.errorService.showError("Unknown status: " + status);
+        }
+      } else {
+        me.errorService.showError("data.status is undefined!!!");
+      }
+    }, (ee) => {
+      if (!me.isCancellationPending) {
+        me.errorService.showError(ee);
+      }
+      me.stopCapturing(false);
+    });
+  }
+
+  getStatusInfo(status: string) {
 
     let statusInfo = {
       title: "",
       color: "black"
     };
 
-    switch(status){
+    switch (status) {
       case "ready":
         statusInfo.title = "READY";
         statusInfo.color = "green";
@@ -194,23 +213,24 @@ export class HomePage {
     this.statusInfo = statusInfo;
   }
 
-  forceReleaseStroller(){
+  forceReleaseStroller() {
 
     let me = this;
 
     this.errorService.showConfirmation("Device busy",
       "Releasing currently working device may impact result images. Do you want to continue anyway?",
-      "Yes").then(()=>{
-      this.strollerService.cancelCapturing(true).then(()=>{
+      "Yes").then(() => {
+      this.strollerService.cancelCapturing(true).then(() => {
         me.isCapturing = false;
         me.refresh();
-      }, (e)=>{
+      }, (e) => {
         this.errorService.showError(e);
       })
-    }, ()=>{});
+    }, () => {
+    });
   }
 
-  refresh(){
+  refresh() {
     let loader = this.loaderController.create({
       content: "Connecting..."
     });
@@ -228,4 +248,6 @@ export class HomePage {
       });
     });
   }
+
+  private
 }

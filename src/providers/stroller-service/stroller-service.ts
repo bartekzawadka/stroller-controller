@@ -80,7 +80,8 @@ export class StrollerServiceProvider {
       'post', this.http);
     request = request.data({
       direction: settings.direction,
-      stepAngle: settings.stepAngle
+      stepAngle: settings.stepAngle,
+      camera: settings.camera
     });
     return request.execute();
   }
