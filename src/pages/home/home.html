@@ -20,7 +20,7 @@
     <ion-row>
       <ion-col col-md-6 *ngIf="statusData && statusData.status !== 'busy'">
         <button ion-button class="vertical-icon-button full-width" large outline
-                (click)="takePhoto()" [disabled]="!statusData || statusData.status !=='ready'">
+                (click)="takePhoto()" [disabled]="!statusData || statusData.status !=='ready' || !isCameraSet">
           <div>
             <ion-icon name="aperture" style="font-size: 80px"></ion-icon>
             <label style="display: block;">CAPTURE 360</label>

@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {LoadingController, NavController} from 'ionic-angular';
-import {SettingsConnectionPage} from "../settings-connection/settings-connection";
 import {ErrorDialogProvider} from "../../providers/error-dialog/error-dialog";
 import {StrollerServiceProvider} from "../../providers/stroller-service/stroller-service";
 import {StrollerSettings} from "../../models/stroller-settings";
@@ -23,7 +22,8 @@ export class SettingsPage {
 
   ionViewDidEnter() {
     let loader = this.loaderController.create({
-      content: "Loading device configuration..."
+      content: "Loading device configuration...",
+      enableBackdropDismiss: true
     });
     loader.present().then(value => {
 
@@ -34,7 +34,6 @@ export class SettingsPage {
           this.settings.stepAngle = value.stepAngle;
 
           let cameras = [];
-          cameras.push(new KeyValueItem('Local camera', ''));
           if (value.cameras && value.cameras.length > 0) {
             for (let k = 0; k < value.cameras.length; k++) {
               cameras.push(new KeyValueItem<string>(value.cameras[k].toString(), value.cameras[k].toString()));

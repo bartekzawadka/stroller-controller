@@ -2,11 +2,9 @@ import {Component} from '@angular/core';
 import {NavController, LoadingController} from 'ionic-angular';
 import {StrollerServiceProvider} from '../../providers/stroller-service/stroller-service';
 import {ErrorDialogProvider} from '../../providers/error-dialog/error-dialog';
-import {CameraProvider} from "../../providers/camera-provider/camera-provider";
 import {ImagesPage} from "../images/images";
 import {ImagePage} from "../image/image";
 import {SettingsProvider} from "../../providers/settings-provider/settings-provider";
-import * as io from "socket.io-client";
 
 class SystemStatus {
   status: string;
@@ -33,12 +31,12 @@ export class HomePage {
   capProgress: number = 0;
   capProgressText: string = "0%";
   isShowingImage: boolean = false;
+  isCameraSet: boolean = false;
 
   constructor(public navCtrl: NavController,
               public strollerService: StrollerServiceProvider,
               public errorService: ErrorDialogProvider,
               public loaderController: LoadingController,
-              public cameraService: CameraProvider,
               private settingsService: SettingsProvider) {
     this.getStatusInfo(null);
   }
@@ -74,24 +72,16 @@ export class HomePage {
 
     let me = this;
 
-    let done = (e) => {
-      if (e)
-        me.errorService.showError(e, 'Closing camera failed');
-      if (sendCancel) {
-        me.strollerService.cancelCapturing().then(() => {
-          me.isCapturing = false;
-
-        }, e => {
-          me.errorService.showError(e);
-        });
-      } else {
+    if (sendCancel) {
+      me.strollerService.cancelCapturing().then(() => {
         me.isCapturing = false;
-      }
-    };
 
-    me.cameraService.stopCamera().then(done, e => {
-      done(e);
-    });
+      }, e => {
+        me.errorService.showError(e);
+      });
+    } else {
+      me.isCapturing = false;
+    }
   }
 
   takePhoto() {
@@ -101,12 +91,12 @@ export class HomePage {
     this.isCapturing = true;
     this.isCancellationPending = false;
 
-    let settings = me.settingsService.getStrollerSettings();
+    // let settings = me.settingsService.getStrollerSettings();
 
     let run = function () {
       me.strollerService.capture().then(() => {
 
-        let startCount = 0;
+        // let startCount = 0;
 
         let getImage = function () {
 
@@ -114,24 +104,7 @@ export class HomePage {
             return;
           }
 
-          if(settings && settings.camera){
-            me.sendImage(null, getImage);
-          }else{
-            me.cameraService.takePicture().then((image) => {
-
-              image = "data:image/jpeg;base64," + image;
-              if (startCount < 5) {
-                startCount++;
-                getImage();
-                return;
-              }
-
-              me.sendImage(image, getImage);
-            }, function (e) {
-              me.errorService.showError(e);
-              me.stopCapturing(true);
-            });
-          }
+          me.sendImage(null, getImage);
         };
 
         getImage();
@@ -142,18 +115,10 @@ export class HomePage {
       });
     };
 
-    if (settings && settings.camera) {
-      run();
-    } else {
-      this.cameraService.startCamera().then(() => {
-        run();
-      }, e => {
-        this.errorService.showError(e);
-      });
-    }
+    run();
   }
 
-  private sendImage(image, getImage){
+  private sendImage(image, getImage) {
     let me = this;
     this.strollerService.sendImage(image).then((data) => {
       if (data.progress) {
@@ -232,22 +197,23 @@ export class HomePage {
 
   refresh() {
     let loader = this.loaderController.create({
-      content: "Connecting..."
+      content: "Connecting...",
+      enableBackdropDismiss: true
     });
     loader.present().then(value => {
 
       this.strollerService.getStatus().then(data => {
+        this.isCameraSet = this.settingsService.getStrollerSettings().camera !== '';
         this.statusData = <SystemStatus> data;
         this.getStatusInfo(this.statusData.status);
         loader.dismiss();
       }, error => {
         loader.dismiss();
+        this.isCameraSet = this.settingsService.getStrollerSettings().camera !== '';
         this.statusData = undefined;
         this.getStatusInfo(undefined);
         this.errorService.showError(error);
       });
     });
   }
-
-  private
 }

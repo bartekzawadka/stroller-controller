@@ -16,7 +16,6 @@ import { HttpModule, XHRBackend, RequestOptions} from '@angular/http';
 import { ErrorDialogProvider } from '../providers/error-dialog/error-dialog';
 import { SettingsProvider } from '../providers/settings-provider/settings-provider';
 import { HttpInterceptor } from '../providers/http-interceptor/http-interceptor';
-import { CameraProvider } from '../providers/camera-provider/camera-provider';
 import {ImagePage} from "../pages/image/image";
 import { ImageViewerComponent } from '../components/image-viewer/image-viewer';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
@@ -66,8 +65,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
         return new HttpInterceptor(backend, options);
       },
       deps: [XHRBackend, RequestOptions, AlertController]
-    },
-    CameraProvider
+    }
   ]
 })
 export class AppModule {}
